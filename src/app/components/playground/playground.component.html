@@ -1,10 +1,32 @@
-<div class="row justify-content-center">
+<div class="row justify-content-center" *ngIf="!isFinished">
     <div [ngStyle]="containerStyle">
         <div class="embed-responsive embed-responsive-1by1 text-center">
             <div class="embed-responsive-item bg-primary">
-                <div class="row" *ngFor="let space of spaces">
-                    <div class="bg-empty" [ngStyle]="boxStyle" *ngFor="let s of space">
+                <div class="row" *ngFor="let space of spaces;let i=index">
+                    <div class="bg-empty" [ngStyle]="boxStyle" *ngFor="let s of space;let j=index"
+                        (click)="play(s,i,j)">
                         <div class="content" [ngStyle]="textStyle">33</div>
+                    </div>
+                    <!-- <div class="row" *ngFor="let space of spaces; let i = index">
+            <div class="square bg-empty" *ngFor="let s of space; let j = index" (click)="play(s,i,j)" [style.background-color]="setColor(s,i,j)">
+              <div class="content" [innerText]="s"></div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row justify-content-center" *ngIf="isFinished">
+    <div [ngStyle]="containerStyle">
+        <div class="embed-responsive embed-responsive-1by1 text-center">
+            <div class="embed-responsive-item bg-primary">
+                <div class="content" style="background-color:#008db1;">
+                    <span  [style.font-size.px]="borderSize*50">
+                        33
+                    </span>
+                    <div class="content pointer" [style.font-size.px]="borderSize*10" (click)="restart()">
+                        Restart
                     </div>
                 </div>
             </div>

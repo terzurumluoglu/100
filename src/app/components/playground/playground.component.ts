@@ -1,4 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
+import { GameService } from "../../services/game/game.service";
+import { k } from "../../constants/game";
 
 @Component({
   selector: 'app-playground',
@@ -14,14 +16,32 @@ export class PlaygroundComponent implements OnInit {
   boxStyle: any;
   textStyle: any;
 
+  finishBoxStyle:any;
+
   spaces: any[][];
-  constructor() { }
+  isFinished : boolean = true;
+  constructor(
+    private _game: GameService,
+    ) { }
 
   ngOnInit(): void {
-    this.spaces = this.createPlayGround();
+    this.spaces = this._game.createPlayGround();
     this.size = this.getSize();
     this.borderSize = this.size * 0.01;
     this.setStyle();
+  }
+
+  play(s, i, j) {
+    if (s) {
+      console.log('Bu alan dolu!');
+    }
+    else {
+
+    }
+  }
+
+  restart(){
+    this.spaces = this._game.createPlayGround();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -32,7 +52,6 @@ export class PlaygroundComponent implements OnInit {
   }
 
   getSize(): number {
-    const k: number = 0.75;
     return window.innerWidth <= window.innerHeight ? window.innerWidth * k : window.innerHeight * k;
   }
 
@@ -52,15 +71,7 @@ export class PlaygroundComponent implements OnInit {
     };
     this.textStyle = {
       'font-size': this.borderSize * 6 + 'px'
-    }
-  }
-
-  createPlayGround() {
-    let a: any[][] = new Array(10);
-    for (let i = 0; i < 10; i++) {
-      a[i] = new Array(10);
-    }
-    return a;
+    };
   }
 
 }
