@@ -1,0 +1,13 @@
+<div class="row justify-content-center">
+    <div [ngStyle]="containerStyle">
+        <div class="embed-responsive embed-responsive-1by1 text-center">
+            <div class="embed-responsive-item bg-primary">
+                <div class="row" *ngFor="let space of spaces">
+                    <div class="bg-empty" [ngStyle]="boxStyle" *ngFor="let s of space">
+                        <div class="content" [ngStyle]="textStyle">33</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
