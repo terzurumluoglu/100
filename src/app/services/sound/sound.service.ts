@@ -5,11 +5,12 @@ import { Injectable } from '@angular/core';
 })
 export class SoundService {
 
+  path : string = 'https://puzzle-31694870.web.app/assets/sounds/';
   constructor() { }
 
   playAudio(file : string){
     let audio = new Audio();
-    audio.src = '../../../assets/sounds/' + file + '.wav';
+    audio.src = this.path + file + '.wav';
     audio.load();
     audio.play();
   }

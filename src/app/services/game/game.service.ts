@@ -65,19 +65,37 @@ export class GameService {
     }
   }
 
+  Cells(row: number, col: number){
+    const islem : number[] = [-1,1];
+    const arr : any[][] = [];
+    for (let i = 0; i < 2; i++) {
+      arr.push([row,col + islem[i]*horizontal]);
+      arr.push([row - islem[i]*horizontal,col]);
+      arr.push([row + islem[i]*cross,col + islem[i]*cross]);
+      arr.push([row - islem[i]*cross,col + islem[i]*cross]);
+    }
+    return arr;
+  }
+
   endControl(row: number, col: number,count : number,spaces: any[][]) {
+    let flag : boolean = false;
     if (count == 1) {
-      return true;
+      flag = true;
     }
     else {
-      if (this.fillControl(row, col + horizontal,spaces) || this.fillControl(row, col - horizontal,spaces) || this.fillControl(row - horizontal, col,spaces) || this.fillControl(row + horizontal, col,spaces) || this.fillControl(row - cross, col - cross,spaces) ||
-        this.fillControl(row - cross, col + cross,spaces) || this.fillControl(row + cross, col - cross,spaces) || this.fillControl(row + cross, col + cross,spaces)) {
-        return true;
-      }
-      else {
-        return false;
+      const arr : any[][] = this.Cells(row,col);
+      for (let i = 0; i < arr.length; i++) {
+        if (flag === true) {
+          break;
+        }
+        else{
+          if (this.fillControl(arr[i][0],arr[i][1],spaces)) {
+            flag = true;
+          }
+        }
       }
     }
+    return flag;
   }
 
   getIndex(key, arr: any[][]): any[] {
