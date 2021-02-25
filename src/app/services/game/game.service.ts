@@ -41,12 +41,7 @@ export class GameService {
       return false;
     }
     else {
-      if (spaces[row][col] == null) {
-        return true;
-      }
-      else {
-        return false;
-      }
+      return spaces[row][col] == null;
     }
   }
 
