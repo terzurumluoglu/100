@@ -9,11 +9,7 @@ export class GameService {
   constructor() { }
 
   createPlayGround(): any[][] {
-    let playGround: any[][] = new Array(10);
-    for (let i = 0; i < 10; i++) {
-      playGround[i] = new Array(10);
-    }
-    return playGround;
+    return Array(10).fill(undefined).map(()=>Array(10).fill(undefined));
   }
 
   playControl(count: number, row: number, col: number,spaces : any[][]): boolean {
