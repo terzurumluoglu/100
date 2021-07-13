@@ -18,7 +18,7 @@ export class PlaygroundComponent implements OnInit {
   textStyle: any;
 
   spaces: any[][];
-  goOnArray: any[];
+  goOn: any[][];
   isFinished: boolean = false;
 
   count: number;
@@ -29,10 +29,11 @@ export class PlaygroundComponent implements OnInit {
 
   ngOnInit(): void {
     this.restart();
-    this.goOnArray = localStorage.getItem('goOn') ? localStorage.getItem('goOn').split(':') : [];
-    if (this.goOnArray.length != 0) {
-      this.spaces = JSON.parse(this.goOnArray[1]);
-      this.count = parseInt(this.goOnArray[0]);
+    this.goOn = localStorage.getItem('goOn') ? JSON.parse(localStorage.getItem('goOn')) : [];
+    if (this.goOn.length != 0) {
+      this.spaces = this.goOn;
+      var arr = this.goOn.join().split(',').filter(f => parseInt(f)).map(m => +m);
+      this.count = Math.max(...arr);
     }
     this.size = this.getSize();
     this.borderSize = this.size * 0.01;
@@ -56,7 +57,7 @@ export class PlaygroundComponent implements OnInit {
 
           this.count++
           this.spaces[row][col] = this.count;
-          localStorage.setItem('goOn', this.count.toString() + ':' + JSON.stringify(this.spaces));
+          localStorage.setItem('goOn', JSON.stringify(this.spaces));
         }
         else {
           this._sound.playWrong();
