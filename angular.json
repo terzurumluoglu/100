@@ -36,6 +36,13 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "baseHref": "https://terzurumluoglu.github.io/100/",
               "budgets": [
                 {
                   "type": "initial",
@@ -97,6 +104,9 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }
