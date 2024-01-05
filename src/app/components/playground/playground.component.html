@@ -1,33 +1,19 @@
-<div class="row justify-content-center" *ngIf="!isFinished">
-    <div [ngStyle]="containerStyle">
-        <div class="embed-responsive embed-responsive-1by1 text-center">
-            <div class="embed-responsive-item bg-primary">
-                <div class="row" *ngFor="let space of spaces;let i=index">
-                    <div class="bg-empty" [ngStyle]="boxStyle" *ngFor="let s of space;let j=index"
-                        (click)="play(s,i,j)" [style.background-color]="setColor(s,i,j)">
-                        <div class="content" [ngStyle]="textStyle" [innerText]="s === undefined ? '' : s">33</div>
-                    </div>
-                    <!-- <div class="row" *ngFor="let space of spaces; let i = index">
-            <div class="square bg-empty" *ngFor="let s of space; let j = index" (click)="play(s,i,j)" [style.background-color]="setColor(s,i,j)">
-              <div class="content" [innerText]="s"></div> -->
-                </div>
+<div class="row justify-content-center">
+    <section id="playground" class="grid" [ngStyle]="gridStyle" *ngIf="!isFinished">
+        <div class="grid-item" [ngStyle]="gridItemStyle" *ngFor="let space of spaces; let i = index;">
+            <div class="item pointer" [ngStyle]="itemStyle" [style.background-color]="setColor(s, i, j)"
+                *ngFor="let s of space; let j = index;" (click)="play(s, i, j)">
+                <span [innerText]="!!s ? s : ''"></span>
             </div>
         </div>
-    </div>
-</div>
+    </section>
 
-
-<div class="row justify-content-center" *ngIf="isFinished">
-    <div [ngStyle]="containerStyle">
-        <div class="embed-responsive embed-responsive-1by1 text-center">
-            <div class="embed-responsive-item bg-primary">
-                <div class="content" style="background-color:#008db1;">
-                    <span  [style.font-size.px]="borderSize*50" [innerText]="count"></span>
-                    <div class="content pointer" [style.font-size.px]="borderSize*10" (click)="restart()">
-                        Restart
-                    </div>
-                </div>
+    <section id="result" class="grid result text-center" [ngStyle]="gridStyle" *ngIf="isFinished">
+        <div class="board">
+            <span [style]="scoreFont" [innerText]="count"></span>
+            <div class="pointer" [style]="restartFont" (click)="restart()">
+                Restart
             </div>
         </div>
-    </div>
+    </section>
 </div>

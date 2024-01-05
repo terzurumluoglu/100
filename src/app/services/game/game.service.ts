@@ -1,100 +1,36 @@
 import { Injectable } from '@angular/core';
-import { horizontal, cross } from 'src/app/constants/game';
+import { PLAY_GROUND } from "@constants";
+import { IAvailableCell } from "@models";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
 
-  constructor() { }
+  availableNumbers: number[] = Array(PLAY_GROUND.SIZE).fill(0).map((_: number, i: number) => i);
+  availableCells: IAvailableCell = {};
+
+  constructor() {
+    this.availableCells[0] = Array(100).fill(undefined).map((_: undefined, i: number) => [(i - i % 10) / 10, i % 10]);
+  }
 
   createPlayGround(): any[][] {
-    return Array(10).fill(undefined).map(()=>Array(10).fill(undefined));
+    return Array(PLAY_GROUND.SIZE).fill(undefined).map(() => Array(PLAY_GROUND.SIZE).fill(undefined));
   }
 
-  playControl(count: number, row: number, col: number,spaces : any[][]): boolean {
-    count = count + 1;
-    let dizi: number[] = this.getIndex(count - 1, spaces);
-    if (count == 1) {
-      return true;
-    }
-    else if ((dizi[0] == row && (dizi[1] + horizontal == col || dizi[1] - horizontal == col))) {
-      return true;
-    }
-    else if ((dizi[1] == col && (dizi[0] + horizontal == row || dizi[0] - horizontal == row))) {
-      return true;
-    }
-    else if (((dizi[0] - cross) == row && (dizi[1] - cross) == col) || ((dizi[0] - cross) == row && (dizi[1] + cross) == col) || ((dizi[0] + cross) == row && (dizi[1] + cross) == col) || ((dizi[0] + cross) == row && (dizi[1] - cross) == col)) {
-      return true;
-    }
-    else {
-      return false;
-    }
+  isNumberAvailable = (row: number, col: number, spaces: number[][]): boolean => {
+    return [row, col].every((num: number) => this.availableNumbers.includes(num)) && !spaces[row][col];
   }
 
-  fillControl(row: number, col: number, spaces: any[][]): boolean {
-    if (row < 0 || row > 9 || col < 0 || col > 9) {
-      return false;
-    }
-    else {
-      return spaces[row][col] == null;
-    }
-  }
-
-  setColor(val, row, col, count: number,spaces : any[][]): string {
-    if (val != null) {
-      if (val == count) {
-        return '#1CB5C7';
-      } else {
-        return '#737C85';
-      }
-    }
-    else if (this.playControl(count, row, col,spaces)) {
-      return '#F95F53';
-    } else {
-      return '#17536F';
-    }
-  }
-
-  Cells(row: number, col: number){
-    const islem : number[] = [-1,1];
-    const arr : any[][] = [];
-    for (let i = 0; i < 2; i++) {
-      arr.push([row,col + islem[i]*horizontal]);
-      arr.push([row - islem[i]*horizontal,col]);
-      arr.push([row + islem[i]*cross,col + islem[i]*cross]);
-      arr.push([row - islem[i]*cross,col + islem[i]*cross]);
-    }
-    return arr;
-  }
-
-  endControl(row: number, col: number,count : number,spaces: any[][]) {
-    let flag : boolean = false;
-    if (count == 1) {
-      flag = true;
-    }
-    else {
-      const arr : any[][] = this.Cells(row,col);
-      for (let i = 0; i < arr.length; i++) {
-        if (flag === true) {
-          break;
-        }
-        else{
-          if (this.fillControl(arr[i][0],arr[i][1],spaces)) {
-            flag = true;
-          }
-        }
-      }
-    }
-    return flag;
-  }
-
-  getIndex(key, arr: any[][]): any[] {
-    for (let i: number = 0; i < arr.length; i++) {
-      var index = arr[i].indexOf(key);
-      if (index > -1) {
-        return [i, index];
-      }
-    }
+  generateAvailableCells = (count: number, row: number, col: number, spaces: number[][]) => {
+    const nums: number[] = [-1, 1];
+    const arr: number[][] = [];
+    nums.forEach((num: number) => {
+      this.isNumberAvailable(row, col + num * PLAY_GROUND.HORIZONTAL_VERTICAL, spaces) && arr.push([row, col + num * PLAY_GROUND.HORIZONTAL_VERTICAL]);
+      this.isNumberAvailable(row + num * PLAY_GROUND.HORIZONTAL_VERTICAL, col, spaces) && arr.push([row + num * PLAY_GROUND.HORIZONTAL_VERTICAL, col]);
+      this.isNumberAvailable(row + num * PLAY_GROUND.CROSS, col + num * PLAY_GROUND.CROSS, spaces) && arr.push([row + num * PLAY_GROUND.CROSS, col + num * PLAY_GROUND.CROSS]);
+      this.isNumberAvailable(row - num * PLAY_GROUND.CROSS, col + num * PLAY_GROUND.CROSS, spaces) && arr.push([row - num * PLAY_GROUND.CROSS, col + num * PLAY_GROUND.CROSS]);
+    });
+    this.availableCells[count + 1] = arr;
   }
 }
