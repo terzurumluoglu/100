@@ -1,0 +1,44 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Nova+Slim&display=swap');
+$bg-color: #083548;
+$title-color: #f53d3d;
+$text-color: #fff;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding-top: 1rem;
+    font-family: 'Nova Slim' !important;
+    height: 100vh;
+    background-color: $bg-color;
+    color: $text-color;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: $title-color;
+}
+
+.container {
+    width: 90vw;
+}
+
+.row {
+    margin: 0 !important;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.text-center {
+    text-align: center!important;
+}
+
+.pointer {
+    cursor: pointer;
+}

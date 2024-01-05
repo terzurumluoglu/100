@@ -1,130 +1,83 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { GameService } from "../../services/game/game.service";
-import { SoundService } from "../../services/sound/sound.service";
-import { k,horizontal,cross } from "../../constants/game";
+import { IAvailableCell, IFontSize, IGridItemStyle, IGridStyle } from "@models";
+import { GameService, SoundService, StyleService } from "@services";
 
 @Component({
   selector: 'app-playground',
   templateUrl: './playground.component.html',
-  styleUrls: ['./playground.component.css']
+  styleUrls: ['./playground.component.scss']
 })
 export class PlaygroundComponent implements OnInit {
-
-  size: number;
-  borderSize: number;
-
-  containerStyle: any;
-  boxStyle: any;
-  textStyle: any;
-
+  
+  count: number;
   spaces: any[][];
-  goOn: any[][];
   isFinished: boolean = false;
 
-  count: number;
+  gridStyle: IGridStyle;
+  gridItemStyle: IGridItemStyle;
+  itemStyle: IFontSize;
+  scoreFont: IFontSize;
+  restartFont: IFontSize;
+
   constructor(
-    private _game: GameService,
-    private _sound: SoundService
+    private gameService: GameService,
+    private soundService: SoundService,
+    private readonly styleService: StyleService,
   ) { }
 
   ngOnInit(): void {
     this.restart();
-    this.goOn = localStorage.getItem('goOn') ? JSON.parse(localStorage.getItem('goOn')) : [];
-    if (this.goOn.length != 0) {
-      this.spaces = this.goOn;
-      var arr = this.goOn.join().split(',').filter(f => parseInt(f)).map(m => +m);
-      this.count = Math.max(...arr);
-    }
-    this.size = this.getSize();
-    this.borderSize = this.size * 0.01;
     this.setStyle();
   }
-  
+
   restart() {
     this.isFinished = false;
     this.count = 0;
-    this.spaces = this._game.createPlayGround();
+    this.spaces = this.gameService.createPlayGround();
   }
 
-  play(val, row, col) {
+  play = (val: number, row: number, col: number) => {
     if (val) {
-      this._sound.playWrong();
-    }
-    else {
-      if (this.endControl(row, col)) {
-        if (this.playControl(this.count, row, col)) {
-          this._sound.playMove();
+      this.soundService.wrong();
+    } else {
+      this.gameService.generateAvailableCells(this.count, row, col, this.spaces);
+      const availableCells: IAvailableCell = this.gameService.availableCells;
 
-          this.count++
+      if (!!availableCells[this.count + 1].length) {
+        if (availableCells[this.count].some(s => s[0] === row && s[1] === col)) {
+          this.soundService.move();
+          this.count++;
           this.spaces[row][col] = this.count;
-          localStorage.setItem('goOn', JSON.stringify(this.spaces));
+        } else {
+          this.soundService.wrong();
         }
-        else {
-          this._sound.playWrong();
-        }
-      }
-      else {
+      } else {
         this.count++
         this.spaces[row][col] = this.count;
-        this._sound.playSuccess();
+        this.soundService.success();
         setTimeout(() => {
-          localStorage.removeItem('goOn');
           this.isFinished = true;
         }, 1000);
       }
     }
   }
 
-  setColor(val, row, col): string {
-    return this._game.setColor(val,row,col,this.count,this.spaces);
-  }
-
-  playControl(count: number, row: number, col: number): boolean {
-    return this._game.playControl(count,row,col,this.spaces);
-  }
-
-  fillControl(row: number, col: number): boolean {
-    return this._game.fillControl(row,col,this.spaces);
-  }
-
-  endControl(row: number, col: number) {
-    return this._game.endControl(row,col,this.count,this.spaces);
-  }
-
-  getIndex(key, arr: any[][]): any[] {
-    return this._game.getIndex(key,arr);
+  setColor(val: any, row: any, col: any): string {
+    return this.styleService.setColor(val, row, col, this.count);
   }
 
   // STYLE
-
   @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.size = this.getSize();
-    this.borderSize = this.size * 0.01;
+  onResize(_: any) {
     this.setStyle();
   }
 
-  getSize(): number {
-    return window.innerWidth <= window.innerHeight ? window.innerWidth * k : window.innerHeight * k;
-  }
-
   setStyle() {
-    this.containerStyle = {
-      'height': this.size + 'px',
-      'width': this.size + 'px',
-      'padding': this.borderSize + 'px',
-      'border': this.borderSize + 'px solid #008db1'
-    };
-    this.boxStyle = {
-      'height': (this.size - (this.borderSize * 4)) * 0.1 - this.borderSize + 'px',
-      'width': (this.size - (this.borderSize * 4)) * 0.1 - this.borderSize + 'px',
-      'margin': (this.borderSize * 0.5) + 'px',
-      'line-height': this.borderSize * 8 + 'px',
-      'cursor': 'pointer'
-    };
-    this.textStyle = {
-      'font-size': this.borderSize * 6 + 'px'
-    };
+    const { gridItemStyle, gridStyle, itemStyle, restartFont, scoreFont } = this.styleService.setStyle();
+    this.gridItemStyle = gridItemStyle;
+    this.gridStyle = gridStyle;
+    this.itemStyle = itemStyle;
+    this.restartFont = restartFont;
+    this.scoreFont = scoreFont;
   }
-
 }

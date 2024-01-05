@@ -14,15 +14,15 @@ export class SoundService {
     audio.play();
   }
 
-  playMove(){
+  move(){
     this.playAudio('move');
   }
   
-  playWrong(){
+  wrong(){
     this.playAudio('wrong');
   }
 
-  playSuccess(){
+  success(){
     this.playAudio('success');
   }
 }

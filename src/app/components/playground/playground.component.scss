@@ -1,0 +1,40 @@
+$border-color: #008db1;
+
+.grid {
+    border-style: solid;
+    border-color: $border-color;
+    display: grid;
+    margin-right: auto;
+    margin-left: auto;
+    grid-template-columns: repeat(10, 1fr);
+    box-sizing: content-box;
+    aspect-ratio: 1;
+
+    .grid-item {
+        display: grid;
+        grid-template-rows: repeat(10, 1fr);
+
+        .item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff !important;
+            text-align: center;
+            aspect-ratio: 1;
+        }
+    }
+}
+
+.grid.result {
+    grid-template-columns: 1fr;
+
+    .board {
+        background-color:#008db1;
+        width: 100%;
+        aspect-ratio: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4rem;
+    }
+}
