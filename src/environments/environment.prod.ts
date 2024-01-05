@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  assets: 'https://terzurumluoglu.github.io/100/assets/',
 };

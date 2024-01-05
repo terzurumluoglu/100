@@ -6,6 +6,9 @@
       "@constants": [
         "src/app/constants"
       ],
+      "@env": [
+        "src/environments/environment"
+      ],
       "@models": [
         "src/app/models"
       ],
